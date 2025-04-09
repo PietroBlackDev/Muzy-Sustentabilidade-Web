@@ -10,6 +10,15 @@
     <title>Menu</title>
 </head>
 
+<?php
+include 'conexao.php';
+
+$query_coment = "SELECT TotalHospedes FROM estatisticas order by codigo desc limit 1";
+
+$hospedes = mysqli_query($mysqli, $query_coment);
+
+$row = $hospedes->fetch_assoc();
+?>
 
 <body class="color1">
     <header class="color2 container-fluid">
@@ -41,21 +50,51 @@
         <h2 class="title align-self-center">Ainda faltam:</h2>
 
         <section class="row justify-content-evenly">
-            <p class="col align-self-center txt relogio">
+            <div class="relogio col align-self-center txt">
+                <script>
+                    function atualizarRelogio() {
+                        var agora = new Date();
+                        var horas = String(agora.getHours()).padStart(2, '0');
+                        var minutos = String(agora.getMinutes()).padStart(2, '0');
+                        var segundos = String(agora.getSeconds()).padStart(2, '0');
+                        document.querySelector('.relogio').textContent = horas + ':' + minutos + ':' + segundos;
+                    }
+                    setInterval(atualizarRelogio, 1000);
 
-                <?php 
-                $timezone = new DateTimeZone('America/Sao_Paulo');
-                $agora = new DateTime('now', $timezone);
-                echo $agora->format('H:i:s');?>
-            </p>
+
+                    const data = new Date(); // momento atual 
+                    const horas = data.getHours();
+                    const minutos = data.getMinutes();
+                    const segundos = data.getSeconds();
+
+                    const hhmmmss = [horas, minutos, segundos].join(':');
+                    console.log(hhmmmss);
+
+                    var cafeManha = '11:00:00';
+                    var almoco = '14:30:00';
+                    var cafeTarde = '18:00:00';
+                    var jantar = '22:00:00';
+
+                    if (hhmmmss < cafeManha) {
+                        refeicao = 'Café da Manhã';
+                    } else if (hhmmmss < almoco) {
+                        refeicao = 'Almoço';
+                    } else if (hhmmmss < cafeTarde) {
+                        refeicao = 'Café da Tarde';
+                    } else if (hhmmmss < jantar) {
+                        refeicao = 'Jantar';
+                    }
+
+                </script>
+            </div>
 
             <div class="align-self-start color3 circulo">
-                <h1 class="contagem">91</h1>
-                <h3 class="meio">Hospedes para<br>Jantar</h3>
+                <h1 class="contagem"><?php echo $row["TotalHospedes"]; ?></h1>
+                <h3 class="meio">Hospedes para<br><script>document.write(refeicao);</script></h3>
             </div>
 
 
-            <p class="col align-self-center txt">Jantar</p>
+            <p class="col align-self-center txt"><script> document.write(refeicao);</script></p>
         </section>
     </article>
 
