@@ -1,11 +1,18 @@
+
 <?php
+$dsn = "odbc:Driver={ODBC Driver 17 for SQL Server};Server=10.125.121.109,1435;Database=voluxinterf;";
+$username = "MuzySystem";
+$password = "vsfkelvin2";
 
-$hostname = "localhost";
-$bancodedados = "bd_estatisticas";
-$usuario = "root";
-$senha = "";
+try {
+    $conn = new PDO($dsn, $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$mysqli = new mysqli($hostname, $usuario, $senha, $bancodedados);
-if ($mysqli->connect_errno) {
-    echo "Falha ao conectar: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    // Verificar o banco de dados
+    $stmt = $conn->query("SELECT DB_NAME() AS CurrentDatabase");
+    $currentDatabase = $stmt->fetchColumn();
+    // echo "Banco de dados atual:" . $currentDatabase . '<br><br>';
+} catch (PDOException $e) {
+    echo "Erro ao conectar: " . $e->getMessage();
 }
+?>

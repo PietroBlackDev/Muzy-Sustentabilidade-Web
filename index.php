@@ -1,3 +1,13 @@
+<?php
+include 'conexao.php';
+
+$stmt = $conn->prepare(query: "SELECT count(*) from ivgov_hospede Where Adulto_Crianca = 'A'");
+
+$stmt->execute();
+
+$count = $stmt->fetchColumn();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -10,15 +20,6 @@
     <title>Menu</title>
 </head>
 
-<?php
-include 'conexao.php';
-
-$query_coment = "SELECT TotalHospedes FROM estatisticas order by codigo desc limit 1";
-
-$hospedes = mysqli_query($mysqli, $query_coment);
-
-$row = $hospedes->fetch_assoc();
-?>
 
 <body class="color1">
     <header class="color2 container-fluid">
@@ -46,10 +47,10 @@ $row = $hospedes->fetch_assoc();
         </div>
     </header>
 
-    <article class="container-fluid text-center ">
+    <article class="container-fluid text-center">
         <h2 class="title align-self-center">Ainda faltam:</h2>
 
-        <section class="row justify-content-evenly">
+        <section class="row justify-content-evenly flexiona">
             <div class="relogio col align-self-center txt">
                 <script>
                     function atualizarRelogio() {
@@ -70,12 +71,13 @@ $row = $hospedes->fetch_assoc();
                     const hhmmmss = [horas, minutos, segundos].join(':');
                     console.log(hhmmmss);
 
+                    var refeicao = '';
                     var cafeManha = '11:00:00';
                     var almoco = '14:30:00';
                     var cafeTarde = '18:00:00';
                     var jantar = '22:00:00';
 
-                    if (hhmmmss < cafeManha) {
+                    if (hhmmmss > cafeManha) {
                         refeicao = 'Café da Manhã';
                     } else if (hhmmmss < almoco) {
                         refeicao = 'Almoço';
@@ -89,7 +91,7 @@ $row = $hospedes->fetch_assoc();
             </div>
 
             <div class="align-self-start color3 circulo">
-                <h1 class="contagem"><?php echo $row["TotalHospedes"]; ?></h1>
+                <h1 class="contagem"><?php echo $count ?></h1>
                 <h3 class="meio">Hospedes para<br><script>document.write(refeicao);</script></h3>
             </div>
 
@@ -99,7 +101,7 @@ $row = $hospedes->fetch_assoc();
     </article>
 
 
-    <footer class="color2">
+    <footer class="color2 container-fluid">
         <div class="container text-center">
             <div class="row align-items-end">
                 <div class="col">
