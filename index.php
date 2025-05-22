@@ -1,13 +1,3 @@
-<?php
-include 'conexao.php';
-
-$stmt = $conn->prepare(query: "SELECT count(*) from ivgov_hospede Where Adulto_Crianca = 'A'");
-
-$stmt->execute();
-
-$count = $stmt->fetchColumn();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -47,59 +37,94 @@ $count = $stmt->fetchColumn();
         </div>
     </header>
 
-    <article class="container-fluid text-center">
-        <h2 class="title align-self-center">Ainda faltam:</h2>
+        <article class="container-fluid d-flex justify-content-center align-items-center text-center" style="   min-height: 65vh;">
+            <div class="w-100">
+            <h2 class="title">Ainda faltam:</h2>
 
-        <section class="row justify-content-evenly flexiona">
-            <div class="relogio col align-self-center txt">
-                <script>
-                    function atualizarRelogio() {
-                        var agora = new Date();
-                        var horas = String(agora.getHours()).padStart(2, '0');
-                        var minutos = String(agora.getMinutes()).padStart(2, '0');
-                        var segundos = String(agora.getSeconds()).padStart(2, '0');
-                        document.querySelector('.relogio').textContent = horas + ':' + minutos + ':' + segundos;
-                    }
-                    setInterval(atualizarRelogio, 1000);
+            <section class="row justify-content-center align-items-center flexiona">
+                <div class="relogio col-md-3 txt">
+                    <script>
+                        const url = 'http://10.125.121.135:8081/CI4/public/valor';
+
+                        // Fazendo a requisição GET
+                        function buscarQuantidade() {
+                            fetch(url)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Erro na requisição: ' + response.status);
+                                    }
+                                    return response.json(); // Converte a resposta para JSON
+                                })
+                                .then(data => {
+                                    console.log('Dados recebidos:', data); // Exibe no console
+                                    document.getElementById('quantidade').innerText = data.valor; // Mostra na tela
+                                })
+                                .catch(error => {
+                                    console.error('Erro ao buscar os dados:', error);
+                                });
+                        }
 
 
-                    const data = new Date(); // momento atual 
-                    const horas = data.getHours();
-                    const minutos = data.getMinutes();
-                    const segundos = data.getSeconds();
+                        // Chama a função imediatamente ao carregar a página
+                        buscarQuantidade();
 
-                    const hhmmmss = [horas, minutos, segundos].join(':');
-                    console.log(hhmmmss);
+                        // Atualiza a cada 3 segundos (3000 milissegundos)
+                        setInterval(buscarQuantidade, 1000);
 
-                    var refeicao = '';
-                    var cafeManha = '11:00:00';
-                    var almoco = '14:30:00';
-                    var cafeTarde = '18:00:00';
-                    var jantar = '22:00:00';
 
-                    if (hhmmmss > cafeManha) {
-                        refeicao = 'Café da Manhã';
-                    } else if (hhmmmss < almoco) {
-                        refeicao = 'Almoço';
-                    } else if (hhmmmss < cafeTarde) {
-                        refeicao = 'Café da Tarde';
-                    } else if (hhmmmss < jantar) {
-                        refeicao = 'Jantar';
-                    }
 
-                </script>
+
+                        function atualizarRelogio() {
+                            var agora = new Date();
+                            var horas = String(agora.getHours()).padStart(2, '0');
+                            var minutos = String(agora.getMinutes()).padStart(2, '0');
+                            var segundos = String(agora.getSeconds()).padStart(2, '0');
+                            var hhmmss = horas + ':' + minutos + ':' + segundos;
+
+                            document.querySelector('.relogio').textContent = hhmmss;
+
+                            var refeicao = '';
+                            var cafeManha = '07:00:00';
+                            var almoco = '12:00:00';
+                            var cafeTarde = '17:00:00';
+                            var jantar = '19:00:00';
+
+                            if (hhmmss < cafeManha) {
+                                refeicao = 'Antes do Café da Manhã';
+                            } else if (hhmmss < almoco) {
+                                refeicao = 'Café da Manhã';
+                            } else if (hhmmss < cafeTarde) {
+                                refeicao = 'Almoço';
+                            } else if (hhmmss < jantar) {
+                                refeicao = 'Café da Tarde';
+                            } else {
+                                refeicao = 'Jantar';
+                            }
+
+                            // Atualiza os elementos HTML com a refeição atual
+                            document.getElementById('refeicaoAtual').textContent = refeicao;
+                            document.getElementById('refeicaoTexto').textContent = refeicao;
+                        }
+
+                        setInterval(atualizarRelogio, 1000);
+                    </script>
+                </div>
+
+
+                <div class="col-md-3 color3 circulo">
+                    <h1 class="contagem"><span id="quantidade"></span></h1>
+                    <h3 class="meio">Hóspedes para<br>
+                        <span id="refeicaoAtual"></span>
+                    </h3>
+                </div>
+
+                <p class="col-md-3 txt">
+                    <span id="refeicaoTexto"></span>
+                </p>
+
+            </section>
             </div>
-
-            <div class="align-self-start color3 circulo">
-                <h1 class="contagem"><?php echo $count ?></h1>
-                <h3 class="meio">Hospedes para<br><script>document.write(refeicao);</script></h3>
-            </div>
-
-
-            <p class="col align-self-center txt"><script> document.write(refeicao);</script></p>
-        </section>
-    </article>
-
+        </article>
 
     <footer class="color2 container-fluid">
         <div class="container text-center">
