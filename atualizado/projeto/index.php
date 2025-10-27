@@ -24,11 +24,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="#">Home</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="#">Formulário</a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Estatísticas</a>
+                                <a class="nav-link" target="_blank" href="https://app.powerbi.com/reportEmbed?reportId=1e0850a8-a9f0-47e0-a542-3b45b0bb023d&autoAuth=true&ctid=9ce10668-a4c0-4d09-9d62-91d64618aecd">Estatísticas</a>
                             </li>
                         </ul>
                     </nav>
